@@ -1,228 +1,93 @@
 <?php
 
-////////////////////////////////////////////////////////////////////////////////////////////
-/// 
-/// PowerWeb 3.0 - translated by fallenfate at RageZone (https://forum.ragezone.com/f587/)
-/// 
-////////////////////////////////////////////////////////////////////////////////////////////
+	class NewsController extends Controller {
+		function actionIndex() {
+			Yii::app()->clientScript->registerMetaTag( 'Powered By PowerWeb ' . @Power::version(  ), 'generator' );
 
-class NewsController extends Controller
-{
-	public $layout='//content';
-	
-	protected function performAjaxValidation($model) {
-		if(isset($_POST['ajax']) && $_POST['ajax']==='user-form') {
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
-		}
-	}
-
-	
-	public function actionIndex()
-	{
-		$this->pageTitle = Yii::t('title', 'News');
-		Yii::app()->clientScript->registerMetaTag('Powered By PowerWeb '.Yii::app()->params->version, 'generator');
-		
-		$criteria=new CDbCriteria;
-		$criteria->select = 'news_id, user_id, title, category_id, short_story, date';
-		$criteria->order = 'news_id DESC';
-		
-		$pages=new CPagination(News::model()->count($criteria));
-		$pages->pageSize=Config::get('page_news');
-		$pages->applyLimit($criteria);
-		
-		$model = News::model()->with('category', 'author')->findAll($criteria);
-		
-		$this->render('news_short', array(
-			'model' => $model,
-			'pages' => $pages,
-		));
-	}
-	
-	
-	public function actionView($id)
-	{
-		$criteria=new CDbCriteria;
-		$criteria->select = '*';
-		$criteria->condition = 'news_id = '.$id;
-		$model = News::model()->find($criteria);
-		
-		if ($model) {
-			$this->pageTitle = $model->title;
-			Yii::app()->clientScript->registerMetaTag($model->description, 'description');
-			Yii::app()->clientScript->registerMetaTag($model->keywords, 'keywords');
-			
-			$this->render('news_full', array(
-				'model' => $model,
-			));
-		}
-		else $this->redirect(Yii::app()->homeUrl);
-	}
-	
-	
-	public function actionAdd()
-	{
-		if (Yii::app()->user->isGuest OR Yii::app()->user->access_level < Config::get('access_level_editor')) {
-			$this->redirect(Yii::app()->homeUrl);
-		}
-		
-		$this->pageTitle = Yii::t('title', 'Add a news article');
-		
-		$model=new News;
-		
-		$this->performAjaxValidation($model);
-		
-		if(isset($_POST['News']))
-		{
-			$model->attributes = $_POST['News'];
-			$model->user_id = Yii::app()->user->id;
-			
-			if($model->save())		
-				$this->redirect(Yii::app()->homeUrl.'news/'.$model->news_id);
-		}
-		
-		$this->render('news_form',array(
-			'model'=>$model,
-		));
-	}
-	
-	public function actionEdit($id)
-	{
-		if (Yii::app()->user->isGuest OR Yii::app()->user->access_level < Config::get('access_level_editor')) {
-			$this->redirect(Yii::app()->homeUrl);
-		}
-		
-		$this->pageTitle = Yii::t('title', 'Edit news articles');
-		
-		$model = News::model()->findByPK($id);
-		
-		$this->performAjaxValidation($model);
-		
-		if(isset($_POST['News']))
-		{
-			$model->attributes=$_POST['News'];
-			
-			if($model->save())		
-				$this->redirect(Yii::app()->homeUrl.'news/'.$model->news_id);
-		}
-		
-		$this->render('news_form',array(
-			'model'=>$model,
-		));
-	}
-	
-	
-	public function actionDelete($id)
-	{
-		if (Yii::app()->user->isGuest OR Yii::app()->user->access_level < Config::get('access_level_editor')) {
-			$this->redirect(Yii::app()->homeUrl);
-		}
-		
-		$model = News::model()->findByPK($id);
-		$model->delete();
-		$this->redirect(Yii::app()->homeUrl);
-	}
-	
-	
-	public function actionCategory($name)
-	{
-		$category = NewsCategory::model()->find('alt_name = "'.$name.'"');
-		
-		if ($category)
-		{
-			$criteria=new CDbCriteria;
-			$criteria->select = '*';
-			$criteria->condition = 't.category_id = '.$category->category_id;
-			
-			$pages=new CPagination(News::model()->count($criteria));
-			$pages->pageSize=Config::get('page_news');
-			$pages->applyLimit($criteria);
-			
-			$model = News::model()->with('author', 'category')->findAll($criteria);
-		
-			$this->pageTitle = $category->title;
-			Yii::app()->clientScript->registerMetaTag($category->description, 'description');
-			Yii::app()->clientScript->registerMetaTag($category->keywords, 'keywords');
-			
-			$this->render('news_short', array(
-				'model' => $model,
-				'pages' => $pages,
-			));
-		}
-		else $this->redirect(Yii::app()->homeUrl);
-	}
-	
-	
-	public function actionList()
-	{
-		if (Yii::app()->user->isGuest OR Yii::app()->user->access_level < Config::get('access_level_editor')) {
-			$this->redirect(Yii::app()->homeUrl);
-		}
-		
-		$this->pageTitle = Yii::t('title', 'News articles');
-		
-		$criteria=new CDbCriteria;
-		$criteria->select = 'news_id, user_id, title, category_id, short_story, date';
-		$criteria->order = 'news_id DESC';
-		
-		$pages=new CPagination(News::model()->count($criteria));
-		$pages->pageSize=25;
-		$pages->applyLimit($criteria);
-		
-		$model = News::model()->with('category', 'author')->findAll($criteria);
-		
-		$this->render('news_list', array(
-			'model' => $model,
-			'pages' => $pages,
-		));
-	}
-	
-	
-	public function actionCategories()
-	{
-		if (Yii::app()->user->isGuest OR Yii::app()->user->access_level < Config::get('access_level_admin')) {
-			$this->redirect(Yii::app()->homeUrl);
-		}
-		
-		$this->pageTitle = Yii::t('title', 'Manage news categories');
-		
-		$model = NewsCategory::model()->findAll();
-		
-		if (isset($_GET['id'])) {
-			$id = $_GET['id'];
-			$form = NewsCategory::model()->findByPK($id);
-		}
-		else {
-			$form = new NewsCategory;
-		}
-		
-		$this->performAjaxValidation($form);
-		
-		if(isset($_POST['NewsCategory']))
-		{
-			$form->attributes = $_POST['NewsCategory'];
-			
-			if($form->save()) {
-				Yii::app()->user->setFlash('message', '<div class="flash_success">'.Yii::t('main', 'News articles edited!').'</div>');
-				$this->redirect(Yii::app()->homeUrl.'admin/news/categories/');
+			if (isset( $_GET['page'] )) {
+				$page = (int)$_GET['page'];
+			} 
+			else {
+				$page = 0;
 			}
+
+			
+			$pagesize = Config::get( 'news_per_page' );
+			
+			$dependency = new CDbCacheDependency( 'SELECT MAX(updated) FROM news' );
+			
+			$model = Yii::app(  )->db->cache( 86400, $dependency )->createCommand(  )->select( 'n.id, user_id, n.title, text_short, date, c.name AS category_name, c.alt_name AS category_alt_name, image_id,
+					(SELECT COUNT(*) FROM `news`) AS `count`' )->from( 'news n' )->leftJoin( 'news_category c', 'c.id = n.category_id' )->order( 'id DESC' )->limit( $pagesize )->offset( $page * $pagesize - $pagesize )->queryAll(  );
+			
+			(isset( $model[0] ) ? $count = 0 : $count = 0);
+			$this->pagination = array( $pagesize, $count );
+			$this->render( 'index', array( 'model' => $model ) );
 		}
-		
-		$this->render('category_form',array(
-			'model'=>$model,
-			'form'=>$form,
-		));
-	}
-	
-	
-	public function actionCDelete ($id)
-	{
-		if (Yii::app()->user->isGuest OR Yii::app()->user->access_level < Config::get('access_level_admin')) {
-			$this->redirect(Yii::app()->homeUrl);
+
+		function actionView() {
+			$id = (int)$_GET['id'];
+			
+			
+			$dependency = new CDbCacheDependency( 'SELECT updated FROM news WHERE id = ' . $id );
+			$model = Yii::app(  )->db->cache( 86400, $dependency )->createCommand(  )->select( 'n.id, user_id, n.title, text_short, text_full, comments_enable, n.date, n.description, n.keywords, c.name AS category_name, c.alt_name AS category_alt_name, image_id' )->from( 'news n' )->where( 'n.id=:id', array( ':id' => $id ) )->leftJoin( 'news_category c', 'c.id = n.category_id' )->queryRow(  );
+			
+			
+			
+			$dependency = new CDbCacheDependency( 'SELECT MAX(updated) FROM news_comment WHERE news_id = ' . $id );
+			$comments = Yii::app(  )->db->cache( 86400, $dependency )->createCommand(  )->select( 'user_id, message, date, u.login, u.avatar_id' )->from( 'news_comment c' )->where( 'c.news_id=:id', array( ':id' => $id ) )->leftJoin( 'users u', 'c.user_id = u.id' )->queryAll(  );
+			
+			@Power::checkmodel( $model );
+
+			if (!empty( $model['text_full'] )) {
+				$model['text_full'] = htmlspecialchars_decode( $model['text_full'] );
+			} 
+			else {
+				$model['text_full'] = htmlspecialchars_decode( $model['text_short'] );
+			}
+
+			
+			
+			$post = new CommentForm(  );
+
+			if (isset( $_POST['CommentForm'] )) {
+				@Power::checkauth(  );
+				$post->attributes = $_POST['CommentForm'];
+
+				if ($post->validate(  )) {
+					Yii::app(  )->db->createCommand(  )->insert( 'news_comment', array( 'news_id' => $model['id'], 'user_id' => @Power::userid(  ), 'message' => strip_tags( $post->message ), 'ip' => $_SERVER['REMOTE_ADDR'], 'date' => time(  ), 'status' => 1 ) );
+					Yii::app(  )->user->setFlash( 'message', '<div class="flash_success">' . Yii::t( 'data', 'comment_added' ) . '</div>' );
+					$this->refresh(  );
+				}
+			}
+
+			Yii::app(  )->clientScript->registerMetaTag( $model['description'], 'description' );
+			Yii::app(  )->clientScript->registerMetaTag( $model['keywords'], 'keywords' );
+			$this->render( 'view', array( 'model' => $model, 'comments' => $comments, 'post' => $post ) );
 		}
-		
-		$model = NewsCategory::model()->findByPK($id);
-		$model->delete();
-		$this->redirect(Yii::app()->homeUrl.'news/categories');
+
+		function actionCategory() {
+			
+			$name = $_GET['name'];
+
+			if (isset( $_GET['page'] )) {
+				$page = (int)$_GET['page'];
+			} 
+			else {
+				$page = 0;
+			}
+
+			$pagesize = Config::get( 'news_per_page' );
+			$dependency = new CDbCacheDependency( 'SELECT MAX(updated) FROM news' );
+			$model = Yii::app(  )->db->cache( 86400, $dependency )->createCommand(  )->select( 'n.id, user_id, n.title, text_short, date, c.name AS category_name, c.alt_name AS category_alt_name, image_id, c.title AS category_title, c.description, c.keywords,
+					(SELECT COUNT(*) FROM news n LEFT JOIN news_category c ON c.id=n.category_id WHERE c.alt_name = "' . $name . '") AS `count`' )->from( 'news n' )->where( 'c.alt_name=:name', array( ':name' => $name ) )->leftJoin( 'news_category c', 'c.id = n.category_id' )->order( 'id DESC' )->limit( $pagesize )->offset( $page * $pagesize - $pagesize )->queryAll(  );
+			
+			@Power::checkmodel( $model );
+			$this->pageTitle = $model[0]['category_title'];
+			Yii::app(  )->clientScript->registerMetaTag( $model[0]['description'], 'description' );
+			Yii::app(  )->clientScript->registerMetaTag( $model[0]['keywords'], 'keywords' );
+			$this->pagination = array( $pagesize, $model[0]['count'] );
+			$this->render( 'index', array( 'model' => $model ) );
+		}
 	}
-}
+
+?>

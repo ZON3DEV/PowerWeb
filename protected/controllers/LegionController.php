@@ -1,90 +1,28 @@
 <?php
 
-////////////////////////////////////////////////////////////////////////////////////////////
-/// 
-/// PowerWeb 3.0 - translated by fallenfate at RageZone (https://forum.ragezone.com/f587/)
-/// 
-////////////////////////////////////////////////////////////////////////////////////////////
-
-class LegionController extends Controller
-{
-	public $layout='//content';
-	
-	protected function performAjaxValidation($model) {
-		if(isset($_POST['ajax']) && $_POST['ajax']==='user-form') {
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
-		}
-	}
-
-
-	public function actionIndex($name)
-	{
-		$this->pageTitle = Yii::t('title', 'Legion information - ').' '.$name;
-		
-		$criteria=new CDbCriteria;
-		$criteria->select = 'id, name, contribution_points, level';
-		$criteria->condition = 'name = "'.$name.'"';
-		$model = Legions::model()->with('membersCount')->find($criteria);
-		
-		$criteria=new CDbCriteria;
-		$criteria->select = '*';
-		$criteria->condition = 't.id = '.$model->id;
-		$players = Legions::model()->with('legionMembers', 'legionHistory')->find($criteria);
-		
-		$this->render('legion', array(
-			'model' => $model,
-			'players' => $players,
-		));
-	}
-	
-	
-	public function actionList()
-	{
-		if (Yii::app()->user->isGuest OR Yii::app()->user->access_level < Config::get('access_level_admin')) {
-			$this->redirect(Yii::app()->homeUrl);
-		}
-		
-		$this->pageTitle = Yii::t('title', 'Legion list');
-		
-		$model=new Legions('search');
-		if(isset($_GET['Legions']))
-			$model->attributes=$_GET['Legions'];
-		$this->render('legion_list',array(
-			'model'=>$model,
-		));
-	}
-	
-	
-	public function actionView($name)
-	{
-		if (Yii::app()->user->isGuest OR Yii::app()->user->access_level < Config::get('access_level_admin')) {
-			$this->redirect(Yii::app()->homeUrl);
-		}
-		
-		$this->pageTitle = Yii::t('title', 'Edit legions');
-		
-		$criteria=new CDbCriteria;
-		$criteria->select = '*';
-		$criteria->condition = 'name = "'.$name.'"';
-		
-		$model = Legions::model()->find($criteria);
-		$model->scenario = 'admin_edit';
-		
-		if(isset($_POST['Legions']))
-		{
-			$model->attributes = $_POST['Legions'];
+	class LegionController extends Controller {
+		function actionView() {
 			
-			if ($model->save()) {
-				Yii::app()->user->setFlash('message', '<div class="flash_success">'.Yii::t('main', 'Legions modified!').'</div>');
-				$this->redirect(Yii::app()->homeUrl.'admin/legion/'.$model->name.'/');
-			}
-		}
+			$name = $_GET['name'];
+			$model = Yii::app(  )->gs->cache( 300 )->createCommand(  )->select( 'l.id, l.name, contribution_points, level, date, p.name AS legat, race,
+					(SELECT COUNT(*) FROM legion_members WHERE legion_id = l.id) AS members,
+					(SELECT COUNT(*) FROM `legion_members` WHERE `legion_id` = l.id) AS `count`' )->from( 'legions l' )->where( 'l.name=:name', array( ':name' => $name ) )->leftJoin( 'legion_history h', 'h.legion_id = l.id AND history_type = "CREATE"' )->leftJoin( 'legion_members m', 'm.legion_id = l.id AND m.rank = "BRIGADE_GENERAL"' )->leftJoin( 'players p', 'p.id = m.player_id' )->queryRow(  );
+			
+			Power::checkmodel( $model );
 
-		$this->render('legion_form', array(
-			'model' => $model,
-		));
+			if (isset( $_GET['page'] )) {
+				$page = (int)$_GET['page'];
+			} 
+			else {
+				$page = 0;
+			}
+
+			$pagesize = 390;
+			$players = Yii::app(  )->gs->cache( 300 )->createCommand(  )->select( 'rank, name, race, exp, player_class, online' )->from( 'legion_members m' )->leftJoin( 'players p', 'm.player_id=p.id' )->where( 'legion_id = ' . $model['id'] )->order( 'FIELD(rank, "BRIGADE_GENERAL", "CENTURION", "LEGIONARY"), exp DESC' )->limit( $pagesize )->offset( $page * $pagesize - $pagesize )->queryAll(  );
+			
+			$this->pagination = array( $pagesize, $model['count'] );
+			$this->render( '/legion', array( 'model' => $model, 'players' => $players ) );
+		}
 	}
 
-
-}
+?>

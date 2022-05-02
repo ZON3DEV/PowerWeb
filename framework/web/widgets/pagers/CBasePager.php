@@ -4,7 +4,7 @@
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @link http://www.yiiframework.com/
- * @copyright Copyright &copy; 2008-2011 Yii Software LLC
+ * @copyright 2008-2013 Yii Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
@@ -15,12 +15,11 @@
  *
  * @property CPagination $pages The pagination information.
  * @property integer $pageSize Number of items in each page.
- * @property integer $item_count Total number of items.
+ * @property integer $itemCount Total number of items.
  * @property integer $pageCount Number of pages.
  * @property integer $currentPage The zero-based index of the current page. Defaults to 0.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
- * @version $Id: CBasePager.php 3426 2011-10-25 00:01:09Z alexander.makarow $
  * @package system.web.widgets.pagers
  * @since 1.0
  */

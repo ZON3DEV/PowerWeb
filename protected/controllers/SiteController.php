@@ -1,68 +1,48 @@
 <?php
 
-////////////////////////////////////////////////////////////////////////////////////////////
-/// 
-/// PowerWeb 3.0 - translated by fallenfate at RageZone (https://forum.ragezone.com/f587/)
-/// 
-////////////////////////////////////////////////////////////////////////////////////////////
+	class SiteController extends Controller {
+		function actionError() {
+			$this->layout = NULL;
+			
+			$error = Yii::app(  )->errorHandler->error;
 
-class SiteController extends Controller
-{
-	public $layout='//content';
-	
-	/**
-	 * Declares class-based actions.
-	 */
-	public function actions()
-	{
-		return array(
-			'captcha'=>array(
-				'class'=>'CCaptchaAction',
-				'backColor'=>0xFFFFFF,
-			),
-		);
-	}
-	
-	protected function performAjaxValidation($model) {
-		if(isset($_POST['ajax']) && $_POST['ajax']==='user-form') {
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
-		}
-	}
-	
-	
-	/**
-	 * This is the action to handle external exceptions.
-	 */
-	public function actionError()
-	{
-	    if($error=Yii::app()->errorHandler->error)
-	    {
-	    	if(Yii::app()->request->isAjaxRequest)
-	    		echo $error['message'];
-	    	else
-	        	$this->render('/error', $error);
-	    }
-	}
-
-	/**
-	 * Displays the contact page
-	 */
-	public function actionContact()
-	{
-		$model=new ContactForm;
-		if(isset($_POST['ContactForm']))
-		{
-			$model->attributes=$_POST['ContactForm'];
-			if($model->validate())
-			{
-				$headers="From: {$model->email}\r\nReply-To: {$model->email}";
-				mail(Yii::app()->params['adminEmail'],$model->subject,$model->body,$headers);
-				Yii::app()->user->setFlash('contact','Thank you for contacting us. We will respond to you as soon as possible.');
-				$this->refresh();
+			if (Yii::app(  )->request->isAjaxRequest) {
+				echo $error['message'];
+				return null;
 			}
+
+			$this->render( '/error', array( 'error' => $error ) );
 		}
-		$this->render('contact',array('model'=>$model));
+
+		function actionMessage() {
+			
+			$title = Yii::app(  )->user->getFlash( 'title' );
+			
+			$message = Yii::app(  )->user->getFlash( 'message' );
+
+			if (!$message) {
+				
+				$title = Yii::t( 'data', 'info' );
+				
+				$message = Yii::t( 'data', 'no_messages' );
+				
+				$cookieMessage = Yii::app(  )->request->cookies['pow_message'];
+
+				if (isset( $cookieMessage )) {
+					
+					$message = $cookieMessage->value;
+					//unset( Yii::app(  )->request->cookies[pow_message] );
+				}
+			}
+
+
+			if (!$title) {
+				
+				$title = Yii::t( 'data', 'info' );
+			}
+
+			$this->render( '/message', array( 'title' => $title, 'message' => $message ) );
+		}
 	}
 
-}
+?>

@@ -4,7 +4,7 @@
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @link http://www.yiiframework.com/
- * @copyright Copyright &copy; 2008-2011 Yii Software LLC
+ * @copyright 2008-2013 Yii Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
@@ -22,14 +22,14 @@
  * Controller action:
  * <pre>
  * function actionIndex(){
- *     $criteria = new CDbCriteria();
+ *     $criteria=new CDbCriteria();
  *     $count=Article::model()->count($criteria);
  *     $pages=new CPagination($count);
  *
  *     // results per page
  *     $pages->pageSize=10;
  *     $pages->applyLimit($criteria);
- *     $models = Post::model()->findAll($criteria);
+ *     $models=Article::model()->findAll($criteria);
  *
  *     $this->render('index', array(
  *     'models' => $models,
@@ -51,7 +51,7 @@
  * </pre>
  *
  * @property integer $pageSize Number of items in each page. Defaults to 10.
- * @property integer $item_count Total number of items. Defaults to 0.
+ * @property integer $itemCount Total number of items. Defaults to 0.
  * @property integer $pageCount Number of pages.
  * @property integer $currentPage The zero-based index of the current page. Defaults to 0.
  * @property integer $offset The offset of the data. This may be used to set the
@@ -61,7 +61,6 @@
  * This returns the same value as {@link pageSize}.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
- * @version $Id: CPagination.php 3515 2011-12-28 12:29:24Z mdomba $
  * @package system.web
  * @since 1.0
  */
@@ -88,7 +87,7 @@ class CPagination extends CComponent
 	/**
 	 * @var boolean whether to ensure {@link currentPage} is returning a valid page number.
 	 * When this property is true, the value returned by {@link currentPage} will always be between
-	 * 0 and ({@link pageCount}-1). Because {@link pageCount} relies on the correct value of {@link item_count},
+	 * 0 and ({@link pageCount}-1). Because {@link pageCount} relies on the correct value of {@link itemCount},
 	 * it means you must have knowledge about the total number of data items when you want to access {@link currentPage}.
 	 * This is fine for SQL-based queries, but may not be feasible for other kinds of queries (e.g. MongoDB).
 	 * In those cases, you may set this property to be false to skip the validation (you may need to validate yourself then).
@@ -98,16 +97,16 @@ class CPagination extends CComponent
 	public $validateCurrentPage=true;
 
 	private $_pageSize=self::DEFAULT_PAGE_SIZE;
-	private $_item_count=0;
+	private $_itemCount=0;
 	private $_currentPage;
 
 	/**
 	 * Constructor.
-	 * @param integer $item_count total number of items.
+	 * @param integer $itemCount total number of items.
 	 */
-	public function __construct($item_count=0)
+	public function __construct($itemCount=0)
 	{
-		$this->setItemCount($item_count);
+		$this->setItemCount($itemCount);
 	}
 
 	/**
@@ -132,7 +131,7 @@ class CPagination extends CComponent
 	 */
 	public function getItemCount()
 	{
-		return $this->_item_count;
+		return $this->_itemCount;
 	}
 
 	/**
@@ -140,8 +139,8 @@ class CPagination extends CComponent
 	 */
 	public function setItemCount($value)
 	{
-		if(($this->_item_count=$value)<0)
-			$this->_item_count=0;
+		if(($this->_itemCount=$value)<0)
+			$this->_itemCount=0;
 	}
 
 	/**
@@ -149,7 +148,7 @@ class CPagination extends CComponent
 	 */
 	public function getPageCount()
 	{
-		return (int)(($this->_item_count+$this->_pageSize-1)/$this->_pageSize);
+		return (int)(($this->_itemCount+$this->_pageSize-1)/$this->_pageSize);
 	}
 
 	/**

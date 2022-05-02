@@ -1,60 +1,45 @@
 <?php
 
 return array(
-	'register/captcha' => 'account/captcha',
+	'message' => 'site/message',
+
+	// UserController
+	'user/registration/<id:\d+>' => 'user/registration',
+	'user/activation/<code:\w+>' => 'user/activation',
+	'user/changepassword/<code:\w+>' => 'user/changepassword',
+
+	// NewsController
+	'news/page/<page:\d+>' => 'news/index',
+	'news/category/<name:\w+>/page/<page:\d+>' => 'news/category',
+	'news/category/<name:\w+>' => 'news/category',
+
+	// PageController
+	'page/<name:\w+>' => 'page/view',
+
+	// PlayerController
 	'player/captcha' => 'player/captcha',
-	/* Account */
-	'register' => 'account/register',
-	'register/<id:\d+>'=>'account/register',
-	'lostpassword' => 'account/lostpassword',
-	'settings' => 'account/settings',
-	'logout' => 'account/logout',
-	'account/activation/<name:.*?>' => 'account/activation',
-	'abyss' => 'top/abyss',
-	'legion' => 'top/legion',
-	'online' => 'top/online',
-	'player/<name:.*?>'=>'player/index',
-	'legion/<name:.*?>'=>'legion/index',
-	'search' => 'player/search',
-	/* News */
-	'category/<name:.*?>' => 'news/category',
-	'admin/news/categories' => 'news/categories',
-	'admin/news/categories/<id:\d+>' => 'news/categories',
-	/* Webshop */
-	'webshop/<name:.*?>'=>'webshop/category',
-	'admin/webshop/list'=>'webshop/list',
-	'admin/webshop/edit/<id:\d+>' => 'webshop/edit',
-	'admin/webshop/delete/<id:\d+>' => 'webshop/delete',
-	'admin/webshop/categories' => 'webshop/categories',
-	'admin/webshop/categories/<id:\d+>' => 'webshop/categories',
-	'admin/webshop/cdelete/<id:\d+>' => 'webshop/cdelete',
-	'admin/webshop/add'=>'webshop/add',
-	'admin/webshop/membership'=>'webshop/membership',
-	'admin/webshop/membership/<id:\d+>' => 'webshop/membership',
-	'admin/webshop/mdelete/<id:\d+>' => 'webshop/mdelete',
-	'admin' => 'admin/index',
-	/* Vote */
-	'admin/vote/config'=>'admin/vote/config',
-	'admin/vote/checkaiontop'=>'admin/vote/checkaiontop',
-	'admin/vote/checkl2top'=>'admin/vote/checkl2top',
-	'admin/vote/checkmmotop'=>'admin/vote/checkmmotop',
-	'vote/gtop'=>'admin/vote/gtop',
-	'vote/gamesites'=>'admin/vote/gamesites',
-	'vote/xtremetop'=>'admin/vote/xtremetop',
-	'admin/vote/<name:.*?>'=>'admin/vote/index',
-	'page/add' => 'page/add',
-	'page/edit/<id:\d+>' => 'page/edit',
-	'page/delete/<id:\d+>' => 'page/delete',
-	'page/list' => 'page/list',
-	'page/<name:.*?>' => 'page/page',
-	'admin/account/list' => 'account/list',
-	'admin/account/<name:.*?>' => 'account/view',
-	'admin/player/list' => 'player/list',
-	'admin/player/<name:.*?>' => 'player/edit',
-	'admin/legion/list'=>'legion/list',
-	'admin/legion/<name:.*?>'=>'legion/view',
-	'admin/check/idelete/<id:\d+>' => 'admin/check/idelete',
+	'player/search' => 'player/search',
+	'player/<name:\w+>'=>'player/view',
+
+	// WebshopController
+	'webshop/buy'=>'webshop/buy',
+	'webshop/membership'=>'webshop/membership',
+	'webshop/buymembership'=>'webshop/buymembership',
+	'webshop/enchant'=>'webshop/enchant',
+	'webshop/getenchantprice'=>'webshop/getenchantprice',
+	'webshop/<name:\w+>'=>'webshop/view',
+	'webshop/<name:\w+>/<id:\d+>'=>'webshop/view',
+
+	// LegionController
+	'legion/<name:.*?>'=>'legion/view',
+
+	// Admin CP
+	'admin/message' => 'admin/default/message',
+	'admin/news/allowcomment/<id:\d+>/*' => 'admin/news/allowcomment',
+	'admin/account/<id:\d+>' => 'admin/account/view',
+
 	'<controller:\w+>/<id:\d+>'=>'<controller>/view',
 	'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
 	'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
+	'<module:\w+>/<controller:\w+>/<action:\w+>/<id:\d+>'=>'<module>/<controller>/<action>',
 );

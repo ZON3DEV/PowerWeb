@@ -1,60 +1,51 @@
 <?php
 
-////////////////////////////////////////////////////////////////////////////////////////////
-/// 
-/// PowerWeb 3.0 - translated by fallenfate at RageZone (https://forum.ragezone.com/f587/)
-/// 
-////////////////////////////////////////////////////////////////////////////////////////////
-
-class DroplistController extends Controller
-{
-	public $layout='//content';
-	
-	public function actions() {
-		return Config::captcha();
-	}
-	
-	
-	public function actionIndex()
-	{
-		$this->pageTitle = Yii::t('title', 'Server droplist');
-		
-		$form = new SearchForm();
-		$form->scenario = 'droplist';
-		$model = null;
-		
-		if(isset($_POST['SearchForm']))
-		{
-			$form->attributes = $_POST['SearchForm'];
-			
-			if ($form->validate())
-			{
-				if (!empty($form->mobId) AND !empty($form->item_id)) {
-					$where = 'mobId = '.$form->mobId.' AND itemid = '.$form->item_id;
-				}
-				elseif (!empty($form->mobId)) {
-					$where = 'mobId = '.$form->mobId;
-				}
-				elseif (!empty($form->item_id)) {
-					$where = 'item_id = '.$form->item_id;
-				}
-				else {
-					$where = null;
-				}
-				
-				$criteria=new CDbCriteria;
-				$criteria->select = 'mobId, item_id, min, max, chance';
-				$criteria->condition = $where;
-				$criteria->order = 'chance DESC, max DESC';
-				$criteria->limit = 100;
-				$model = Droplist::model()->findAll($criteria);
-			}
+	class DroplistController extends Controller {
+		function actions() {
+			return @Config::captcha(  );
 		}
-		
-		$this->render('/droplist', array(
-			'form' => $form,
-			'model' => $model,
-		));
+
+		function actionIndex() {
+			if (@Config::getservertype(  ) === 2) {
+				$this->redirect( Power::url(  ) );
+			}
+
+			$post = new SearchForm(  );
+			$post->scenario = 'droplist';
+			$model = array();
+
+			if (isset( $_POST['SearchForm'] )) {
+				$post->attributes = $_POST['SearchForm'];
+
+				if ($post->validate(  )) {
+					if (( !empty( $post->mob_id ) && !empty( $post->item_id ) )) {
+						$where = 'mobId = ' . $post->mob_id . ' AND itemid = ' . $post->item_id;
+					} 
+					else {
+						if (!empty( $post->mob_id )) {
+							$where = 'mobId = ' . $post->mob_id;
+						} 
+						else {
+							if (!empty( $post->item_id )) {
+								$where = 'itemId = ' . $post->item_id;
+							} 
+							else {
+								$where = null;
+							}
+						}
+					}
+
+					$model = Yii::app(  )->gs->cache( 300 )->createCommand(  )->select( 'mobId AS mob_id, itemId AS item_id, min, max, chance' )->from( 'droplist' )->where( $where )->order( 'chance DESC, min DESC' )->limit( 100 )->queryAll(  );
+					
+
+					if (!$model) {
+						Yii::app(  )->user->setFlash( 'message', '<div class="flash_error">' . Yii::t( 'data', 'nothing_found' ) . '</div>' );
+					}
+				}
+			}
+
+			$this->render( '/droplist', array( 'model' => $model, 'post' => $post ) );
+		}
 	}
-	
-}
+
+?>

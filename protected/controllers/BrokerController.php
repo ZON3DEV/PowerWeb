@@ -1,35 +1,22 @@
 <?php
 
-////////////////////////////////////////////////////////////////////////////////////////////
-/// 
-/// PowerWeb 3.0 - translated by fallenfate at RageZone (https://forum.ragezone.com/f587/)
-/// 
-////////////////////////////////////////////////////////////////////////////////////////////
+	class BrokerController extends Controller {
+		function actionIndex() {
+			if (isset( $_GET['page'] )) {
+				$page = (int)$_GET['page'];
+			} 
+			else {
+				$page = 0;
+			}
 
-class BrokerController extends Controller
-{
-	public $layout='//content';
-	
-	
-	public function actionIndex()
-	{
-		$this->pageTitle = Yii::t('title', 'Auctions');
-		
-		$criteria=new CDbCriteria;
-		$criteria->select = 'item_id, item_count, seller, price, broker_race, expire_time'; // Fallenfate - These were broken because they were item_id, item_count, etc.
-		$criteria->order = 'id DESC';
-		$criteria->condition = 'is_sold = 0';
-		
-		$pages=new CPagination(Broker::model()->count($criteria));
-		$pages->pageSize=50;
-		$pages->applyLimit($criteria);
-		
-		$model = Broker::model()->findAll($criteria);
-		
-		$this->render('/broker', array(
-			'model'=>$model,
-			'pages' => $pages,
-		));
+			$pagesize = 401;
+			$model = Yii::app(  )->gs->cache( 300 )->createCommand(  )->select( @Config::column( 'item_id' ) . ' AS item_id, ' . @Config::column( 'item_count' ) . ' AS item_count, seller, price, ' . @Config::column( 'broker_race' ) . ' AS broker_race, ' . @Config::column( 'expire_time' ) . ' AS expire_time,
+					(SELECT COUNT(*) FROM `broker`) AS `count`' )->from( 'broker' )->where( @Config::column( 'is_sold' ) . ' = 0' )->order( 'id DESC' )->limit( $pagesize )->offset( $page * $pagesize - $pagesize )->queryAll(  );
+			
+			(isset( $model[0] ) ? $count = 0 : $count = 0);
+			$this->pagination = array( $pagesize, $count );
+			$this->render( '/broker', array( 'model' => $model ) );
+		}
 	}
 
-}
+?>
