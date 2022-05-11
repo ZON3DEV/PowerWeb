@@ -1,40 +1,40 @@
 <?php
 $config = array(
-	// Данные для подключения к БД обвязки
-	'hostWeb' => 'localhost',			// адрес базы данных
-	'dbnameWeb' => 'pow',				// имя базы данных
-	'userWeb' => 'root',				// логин
-	'passWeb' => 'changme',			// пароль
+	// Website Database Information
+	'hostWeb' => 'localhost',			// Database Adress
+	'dbnameWeb' => 'pow',				// DB Name
+	'userWeb' => 'root',				// User
+	'passWeb' => 'changme',				// Password
 
-	// Данные для подключения к БД форума
-	'hostForum' => 'localhost',			// адрес базы данных
-	'dbnameForum' => 'forum',			// имя базы данных
-	'userForum' => 'root',				// логин
-	'passForum' => 'changme',			// пароль
-	'prefixForum' => '',				// префикс таблиц
+	// Forum Information
+	'hostForum' => 'localhost',			// Database Adress
+	'dbnameForum' => 'forum',			// DB Name
+	'userForum' => 'root',				// User
+	'passForum' => 'changme',			// Password
+	'prefixForum' => '',				// Table Prefix
 
-	// Данные для подключения к БД логинсервера
-	'hostLs' => 'localhost',			// адрес базы данных
-	'dbnameLs' => 'al_server_ls',			// имя базы данных
-	'userLs' => 'root',					// логин
-	'passLs' => 'changme',				// пароль
+	// Login Server Information
+	'hostLs' => 'localhost',			// Database Adress
+	'dbnameLs' => 'al_server_ls',			// DB Name
+	'userLs' => 'root',				// User
+	'passLs' => 'changme',				// Password
 
-	// Данные для подключения к БД геймсервера
-	'hostGs' => 'localhost',			// адрес базы данных
-	'dbnameGs' => 'al_server_gs',			// имя базы данных
-	'userGs' => 'root',					// логин
-	'passGs' => 'changme',				// пароль
+	// Game Server Information
+	'hostGs' => 'localhost',			// Database Adress
+	'dbnameGs' => 'al_server_gs',			// DB Name
+	'userGs' => 'root',				// User
+	'passGs' => 'changme',				// Password
 
-	// Общие настройки
-	'url' => 'http://localhost/',			// адрес главной страницы (слэш на конце обязателен)
-	'theme' => 'light',					// название темы
-	'lang' => 'en',						// язык сайта
-	'caching' => 'CFileCache',			// кеширование (CFileCache - файлы, CDbCache - SQLite, CDummyCache - отключено)
+	// General Settings
+	'url' => 'http://localhost/',			// Website Address (Slash at the End is Required)
+	'theme' => 'light',				// Theme
+	'lang' => 'en',					// Language
+	'caching' => 'CFileCache',			// Caching (CFileCache - Files, CDbCache - SQLite, CDummyCache - Disabled)
 );
 
 $params = array(
-	'lsIp' => 'localhost',				// ip адрес логин-сервера
-	'lsPort' => '2106',					// порт логин-сервера
-	'gsIp' => 'localhost',				// ip адрес гейм-сервера
-	'gsPort' => '7777',					// порт гейм-сервера
+	'lsIp' => 'localhost',				// Login Server Server IP
+	'lsPort' => '2106',				// Port
+	'gsIp' => 'localhost',				// Game Server Server IP
+	'gsPort' => '7777',				// Port
 );
