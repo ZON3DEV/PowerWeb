@@ -1,5 +1,5 @@
 <div class="menu">
-	<div class="menu-title">GM's online</div>
+	<div class="menu-title">Server Support</div>
 	<div class="menu-body">
 		<?php if ($model): ?>
 			<table class="table">
@@ -12,7 +12,7 @@
 				<?php endforeach ?>
 			</table>
 		<?php else: ?>
-			<div class="menu_line">No GM online</div>
+			<div class="menu_line">Derzeit sind keine GMs Online</div>
 		<?php endif; ?>
 	</div>
 </div>
