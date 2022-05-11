@@ -66,14 +66,14 @@
 				<td width="200px"><?php echo @Info::getLevel($player['exp']); ?> level</td>
 			</tr>
 			<tr>
-				<td>Class: <?php echo @Info::getClassText($player['player_class']); ?></td>
-				<td>AP: <?php echo number_format($player['ap'],0,' ',' '); ?></td>
-				<td>HP: <?php echo $player['hp']; ?></td>
+				<td>Klasse: <?php echo @Info::getClassText($player['player_class']); ?></td>
+				<td>Abyss Punkte: <?php echo number_format($player['ap'],0,' ',' '); ?></td>
+				<td>Gesundheit: <?php echo $player['hp']; ?></td>
 			</tr>
 			<tr>
-				<td>Race: <?php echo @Info::getRaceText($player['race']); ?></td>
-				<td>Kills: <?php echo $player['all_kill']; ?></td>
-				<td>MP: <?php echo $player['mp']; ?></td>
+				<td>Volk: <?php echo @Info::getRaceText($player['race']); ?></td>
+				<td>Siege: <?php echo $player['all_kill']; ?></td>
+				<td>Mana: <?php echo $player['mp']; ?></td>
 			</tr>
 		</table>
 	</div>
@@ -81,42 +81,42 @@
 
 
 <div class="note half mr20">
-	<div class="note-title">Statistics</div>
+	<div class="note-title">Statistiken</div>
 	<div class="note-body">	
 		<table class="table tleft">
 			<tr>
-				<td width="150px">Статус</td>
+				<td width="150px">Status</td>
 				<td><?php echo @Info::getOnlineIco($player['online']); ?></td>
 			</tr>
 			<tr>
-				<td>Location</td>
+				<td>Position</td>
 				<td>
 					<?php if ($player['show_location'] == 1 OR @power::isAdmin()): ?><?php echo @Adb::url('world', $player['world_id'], 2); ?>
 					<?php else: ?>Is hidden<?php endif; ?>
 				</td>
 			</tr>
 			<tr>
-				<td>Title</td>
+				<td>Titel</td>
 				<td><?php echo @Adb::url('title', $player['title_id'], 2); ?></td>
 			</tr>
 			<tr>
-				<td>Experience</td>
+				<td>Erfahrung</td>
 				<td><?php echo number_format($player['exp'], 0,' ',' '); ?></td>
 			</tr>
 			<tr>
-				<td>AP</td>
+				<td>Abyss Punkte</td>
 				<td>
-					<span title="За все время"><?php echo number_format($player['ap'], 0,' ',' '); ?></span> /
-					<span title="За неделю "><?php echo number_format($player['weekly_ap'], 0,' ',' '); ?></span> /
-					<span title="За прошлый день"><?php echo number_format($player['daily_ap'], 0,' ',' '); ?></span>
+					<span title="Gesamt"><?php echo number_format($player['ap'], 0,' ',' '); ?></span> /
+					<span title="Pro Woche "><?php echo number_format($player['weekly_ap'], 0,' ',' '); ?></span> /
+					<span title="Am Tag"><?php echo number_format($player['daily_ap'], 0,' ',' '); ?></span>
 				<td>
 			</tr>
 			<tr>
-				<td>Kills</td>
-				<td title="Total / Weekly / Yesterday"><?php echo $player['all_kill']; ?> / <?php echo $player['weekly_kill']; ?> / <?php echo $player['daily_kill']; ?></td>
+				<td>Siege</td>
+				<td title="Gesamt / Woche / Gestern"><?php echo $player['all_kill']; ?> / <?php echo $player['weekly_kill']; ?> / <?php echo $player['daily_kill']; ?></td>
 			</tr>
 			<tr>
-				<td>Rank</td>
+				<td>Rang</td>
 				<td><?php echo @Info::getAbyssRankText($player['rank']); ?></td>
 			</tr>
 			<tr>
@@ -127,11 +127,11 @@
 				</td>
 			</tr>
 			<tr>
-				<td>date of creation</td>
+				<td>Erstellt am:</td>
 				<td><?php echo Yii::app()->dateFormatter->format('dd.MM.y, HH:mm:ss', $player['creation_date']); ?></td>
 			</tr>
 			<tr>
-				<td>last visit</td>
+				<td>Zuletzt Online</td>
 				<td><?php echo Yii::app()->dateFormatter->format('dd.MM.y, HH:mm:ss', $player['last_online']); ?></td>
 			</tr>
 		</table>
@@ -154,13 +154,13 @@
 
 <?php if (@power::isAdmin()): ?>
 	<div class="note">
-		<div class="note-title">Player Inventory</div>
+		<div class="note-title">Inventar</div>
 		<div class="note-body">
 			<table id="player-inventory" class="table">
 				<thead>
 					<tr>
-						<th>Item</th>
-						<th width="100px">Qty</th>
+						<th>Gegenstand</th>
+						<th width="100px">Anzahl</th>
 						<th width="150px">Located</th>
 					</tr>
 				</thead>
@@ -173,7 +173,7 @@
 
 <?php if (@power::isAdmin()): ?>
 	<div class="note">
-		<div class="note-title">Player Mail</div>
+		<div class="note-title">Spieler Nachricht</div>
 		<div class="note-body">
 			<table id="player-mail" class="table">
 				<thead>
