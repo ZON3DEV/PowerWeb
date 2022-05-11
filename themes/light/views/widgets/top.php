@@ -1,15 +1,15 @@
 <div class="note">
-	<div class="note-title">Top Pvp</div>
+	<div class="note-title">Spieler Rangliste</div>
 	<div class="note-body">
 		<table class="table">
 			<tr>
-				<th>No</th>
+				<th>#</th>
 				<th>Name</th>
 				<th>Level</th>
-				<th>PvP</th>
-				<th>AP</th>
-				<th>Race</th>
-				<th>Class</th>
+				<th>Siege</th>
+				<th>Abyss Punkte</th>
+				<th>Volk</th>
+				<th>Klasse</th>
 				<th>Status</th>
 			</tr>
 			<?php $i = 1; foreach ($model as $data): ?>
