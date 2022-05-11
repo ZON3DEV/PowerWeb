@@ -1,8 +1,8 @@
-<?php $this->setPageTitle('Game Account Management'); ?>
+<?php $this->setPageTitle('Kontoverwaltung'); ?>
 
 
 <div class="note">
-	<div class="note-title">Game Account Management</div>
+	<div class="note-title">Kontoverwaltung</div>
 	<div class="note-body">
 		<?php $form=$this->beginWidget('CActiveForm'); echo @Power::message(); ?>
 		<div class="table">
@@ -33,16 +33,16 @@
 
 
 <div class="note">
-	<div class="note-title">Account List</div>
+	<div class="note-title">Mein Konto</div>
 	<div class="note-body">
 		<table class="table">
 			<tr>
-				<th>Login</th>
-				<th>Group</th>
-				<th>Membership</th>
-				<th>Expire</th>
-				<th>Last IP</th>
-				<th>Balance</th>
+				<th>Konto Name</th>
+				<th>Gruppe</th>
+				<th>Abonement</th>
+				<th>Laufzeit</th>
+				<th>Letzte IP</th>
+				<th>Guthaben</th>
 				<th width="16px"></th>
 			</tr>
 			<?php foreach ($accounts as $data): ?>
@@ -62,7 +62,7 @@
 
 
 <div class="note">
-	<div class="note-title">Character List</div>
+	<div class="note-title">Meine Charaktere</div>
 	<div class="note-body">
 		<table class="table">
 			<tr>
