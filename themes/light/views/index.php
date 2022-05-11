@@ -22,9 +22,9 @@ $(document).ready(function restimer() {
 </head>
 <body>
 <div class="box">
-	<div>Текущее время <div id="time" class="hms"></div></div>
-	<div>Ближайший рестарт <div id="next" class="hms"></div></div>
-	<div>Осталось <div id="remain" class="hms"></div></div>
+	<div>Aktuelle Uhrzeit: <div id="time" class="hms"></div></div>
+	<div>Nächster Neustart: <div id="next" class="hms"></div></div>
+	<div>Verbleibend: <div id="remain" class="hms"></div></div>
 </div>
 </body>
 </html>
