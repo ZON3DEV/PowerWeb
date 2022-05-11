@@ -28,5 +28,5 @@
 <div id="server-status">
 	Login: <span class="login-server-status"></span>
 	Game: <span class="game-server-status"></span>
-	<span class="server-status-refresh" url="<?php echo @Power::url('api/serverstatus'); ?>" title="Update Status"></span>
+	<span class="server-status-refresh" url="<?php echo @Power::url('api/serverstatus'); ?>" title="Aktualisieren"></span>
 </div>
